@@ -1,0 +1,36 @@
+version: '3.7'
+
+services:
+  web:
+    volumes:
+      - static:/static
+    env_file:
+      - .env
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - static:/static
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+
+  db:
+    image: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+    env_file: 
+      - .env
+    ports:
+      - "5432:5432"
+
+volumes:
+  static:
+  pgdata:
